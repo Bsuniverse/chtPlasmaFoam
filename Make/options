@@ -1,0 +1,35 @@
+EXE_INC = \
+    -I. \
+    -I./fluid \
+    -I./solid \
+    -I./porousFluid \
+    -I./porousSolid \
+    -I./include \
+    -I$(WM_PROJECT_DIR)/src/meshTools/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/sampling/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/finiteVolume/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/finiteVolume/cfdTools \
+    -I$(WM_PROJECT_DIR)/src/transportModels/incompressible/singlePhaseTransportModel \
+	-I$(WM_PROJECT_DIR)/src/transportModels/ \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/basic/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/specie/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/solidThermo/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/ODE/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/TurbulenceModels/incompressible/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/regionModels/regionModel/lnInclude
+
+
+EXE_LIBS = \
+    -lincompressibleTransportModels \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -lsolidThermo \
+    -lODE \
+    -lturbulenceModels \
+    -lincompressibleTurbulenceModels \
+    -lmeshTools \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lregionModels \
+    -lsampling

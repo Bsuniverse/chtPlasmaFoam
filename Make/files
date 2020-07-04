@@ -1,0 +1,5 @@
+solid/solidRegionDiffNo.C
+fluid/incompressibleCourantNo.C
+chtMultiPlasmaFoam.C
+
+EXE = $(FOAM_USER_APPBIN)/chtMultiPlasmaFoam
