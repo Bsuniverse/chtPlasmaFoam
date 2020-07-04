@@ -17,7 +17,7 @@
         )
       - fvm::laplacian(turbulence.alphaEff(), he)
      ==
-	  (ffluid & U) * sqr(std::sin(2*M_PI*omega.value()*runTime.value()))
+	  (ffluid & U) * sqr(std::sin(2 * M_PI * omega.value() * runTime.value())) * pos(std::sin(2 * M_PI * fplus.value() * runTime.value()))
       + fvOptions(rho, he)
     );
 
