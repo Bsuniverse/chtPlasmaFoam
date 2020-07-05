@@ -11,7 +11,7 @@
             )
           ==
             fvOptions(rho, h)
-		  + epsSo * eps0Solid * rhocMaxSolid * epMaxSolid * 2 * M_PI * omegaSolid * runTime.deltaT().value() * magSqr(fvc::grad(epSo)) * pos(std::sin(2 * M_PI * fplusSolid.value() * runTime.value()))
+		  + epsSo * eps0Solid * omegaSolid * omegaSolid.value() * runTime.deltaT().value() * magSqr(fvc::grad(epSo) * epMaxSolid) * pos(std::sin(2 * M_PI * fplusSolid.value() * runTime.value()))
         );
 
         hEqn.relax();
