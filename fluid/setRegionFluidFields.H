@@ -15,11 +15,11 @@
     pimpleNoLoopControl& pimple = pimples.pimple(i);
 
     scalar cumulativeContErr = cumulativeContErrs[i];
-    dimensionedScalar eps0 = eps0s[i];
-    dimensionedScalar epMax = epMaxs[i];
-    dimensionedScalar rhocMax = rhocMaxs[i];
-    dimensionedScalar omega = omegas[i];
-	dimensionedScalar fplus = fpluses[i];
+    dimensionedScalar eps0 = eps0f[i];
+    dimensionedScalar epMax = epMaxf[i];
+    dimensionedScalar rhocMax = rhocMaxf[i];
+    dimensionedScalar omega = omegaf[i];
+	dimensionedScalar fplus = fplusf[i];
 
 	label pRefCell = 0;   
 	scalar pRefValue = 0.0;

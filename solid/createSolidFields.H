@@ -7,7 +7,11 @@ PtrList<volSymmTensorField> aniAlphas(solidRegions.size());
 PtrList<volScalarField> epSolid(solidRegions.size());
 PtrList<volScalarField> rhocSolid(solidRegions.size());
 PtrList<volScalarField> epsSolid(solidRegions.size());
-
+PtrList<dimensionedScalar> eps0s(solidRegions.size());
+PtrList<dimensionedScalar> epMaxs(solidRegions.size());
+PtrList<dimensionedScalar> rhocMaxs(solidRegions.size());
+PtrList<dimensionedScalar> omegas(solidRegions.size());
+PtrList<dimensionedScalar> fpluses(solidRegions.size());
 // Populate solid field pointer lists
 forAll(solidRegions, i)
 {
@@ -16,6 +20,78 @@ forAll(solidRegions, i)
 
 	Info<< "*** Reading transport properties for region " << solidRegions[i].name() << nl << endl;
 
+//			Reading userdefine parameters			// 
+    IOdictionary userDefinedParameters
+    (
+        IOobject
+        (
+            "userDefinedParameters",
+            runTime.constant(),
+            solidRegions[i],
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE
+        )
+    );
+	
+    Info << "    permiticity of free space, eps0" << endl;
+    eps0s.set
+    (
+        i,
+        new dimensionedScalar
+        (
+            "eps0",
+            dimensionSet(-1, -3, 4, 0, 0, 2, 0),
+            userDefinedParameters.lookup("eps0")
+        )
+    );
+
+    Info << "    electric potential coefficient of input sine signal, epMax" << endl;
+    epMaxs.set
+    (
+        i,
+        new dimensionedScalar
+        (
+            "epMax",
+            dimensionSet(0, 0, 0, 0, 0, 0, 0),
+            userDefinedParameters.lookup("epMax")
+        )
+    );
+
+    Info << "    charge density coefficient of input sine signal, rhocMax" << endl;
+    rhocMaxs.set
+    (
+        i,
+        new dimensionedScalar
+        (
+            "rhocMax",
+            dimensionSet(0, 0, 0, 0, 0, 0, 0),
+            userDefinedParameters.lookup("rhocMax")
+        )
+    );
+
+    Info << "    frequency of input sine signal, omega" << endl;
+    omegas.set
+    (
+        i,
+        new dimensionedScalar
+        (
+            "omega",
+            dimensionSet(0, 0, -1, 0, 0, 0, 0),
+            userDefinedParameters.lookup("omega")
+        )
+    );
+
+    Info << "    control frequency, fplus" << endl;
+    fpluses.set
+    (
+        i,
+        new dimensionedScalar
+        (
+            "fplus",
+            dimensionSet(0, 0, -1, 0, 0, 0, 0),
+            userDefinedParameters.lookup("fplus")
+        )
+    );
 	IOdictionary solidProperties
 	(
 		IOobject

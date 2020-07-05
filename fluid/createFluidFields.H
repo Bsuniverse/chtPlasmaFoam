@@ -11,11 +11,11 @@ PtrList<volVectorField> fFluid(fluidRegions.size());
 PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
 PtrList<singlePhaseTransportModel> laminarTransports(fluidRegions.size());
 PtrList<incompressible::turbulenceModel> turbulenceFluid(fluidRegions.size());
-PtrList<dimensionedScalar> eps0s(fluidRegions.size());
-PtrList<dimensionedScalar> epMaxs(fluidRegions.size());
-PtrList<dimensionedScalar> rhocMaxs(fluidRegions.size());
-PtrList<dimensionedScalar> omegas(fluidRegions.size());
-PtrList<dimensionedScalar> fpluses(fluidRegions.size());
+PtrList<dimensionedScalar> eps0f(fluidRegions.size());
+PtrList<dimensionedScalar> epMaxf(fluidRegions.size());
+PtrList<dimensionedScalar> rhocMaxf(fluidRegions.size());
+PtrList<dimensionedScalar> omegaf(fluidRegions.size());
+PtrList<dimensionedScalar> fplusf(fluidRegions.size());
 
 PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
 PtrList<fv::options> fluidFvOptions(fluidRegions.size());
@@ -39,7 +39,7 @@ forAll(fluidRegions, i)
     );
 	
     Info << "    permiticity of free space, eps0" << endl;
-    eps0s.set
+    eps0f.set
     (
         i,
         new dimensionedScalar
@@ -51,7 +51,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    electric potential coefficient of input sine signal, epMax" << endl;
-    epMaxs.set
+    epMaxf.set
     (
         i,
         new dimensionedScalar
@@ -63,7 +63,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    charge density coefficient of input sine signal, rhocMax" << endl;
-    rhocMaxs.set
+    rhocMaxf.set
     (
         i,
         new dimensionedScalar
@@ -75,7 +75,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    frequency of input sine signal, omega" << endl;
-    omegas.set
+    omegaf.set
     (
         i,
         new dimensionedScalar
@@ -87,7 +87,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    control frequency, fplus" << endl;
-    fpluses.set
+    fplusf.set
     (
         i,
         new dimensionedScalar

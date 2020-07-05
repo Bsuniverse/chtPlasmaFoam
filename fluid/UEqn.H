@@ -22,7 +22,7 @@
             UEqn
          ==
 		 	- fvc::grad(p)
-			+ ffluid * omega.value() * runTime.deltaT().value() * pos(std::sin(2 * M_PI * fplus.value() * runTime.value()))
+			+ ffluid * 2 * M_PI * omega.value() * runTime.deltaT().value() * pos(std::sin(2 * M_PI * fplus.value() * runTime.value()))
         );
 
         fvOptions.correct(U);
