@@ -4,6 +4,7 @@ PtrList<solidThermo> thermos(solidRegions.size());
 PtrList<fv::options> solidHeatSources(solidRegions.size());
 PtrList<volScalarField> betavSolid(solidRegions.size());
 PtrList<volSymmTensorField> aniAlphas(solidRegions.size());
+// Initialise electrical field pointers lists
 PtrList<volScalarField> epSolid(solidRegions.size());
 PtrList<volScalarField> rhocSolid(solidRegions.size());
 PtrList<volScalarField> epsSolid(solidRegions.size());

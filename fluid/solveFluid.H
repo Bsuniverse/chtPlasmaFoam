@@ -1,13 +1,11 @@
 if (pimple.frozenFlow())
 {
-    //#include "EEqn.H"
-	Info<< "	It's frozenFlow" << endl;
+	#include "EEqn.H"
 }
 else
 {
-
     #include "UEqn.H"
-    //#include "EEqn.H"
+	#include "EEqn.H"
 
     // --- PISO loop
     while (pimple.correct())
@@ -17,7 +15,7 @@ else
 
     if (pimples.pimpleTurbCorr(i))
     {
-		laminarTransport.correct();
+		thermo.correct();
         turbulence.correct();
     }
 }
