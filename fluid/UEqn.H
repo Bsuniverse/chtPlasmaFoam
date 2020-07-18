@@ -5,7 +5,8 @@
     (
         fvm::ddt(U) + fvm::div(phi, U)
 	  + MRF.DDt(U)
-      + turbulence.divDevRhoReff(U)
+	  - fvm::laplacian(nu, U)
+      + turbulence.divDevReff(U)
      ==
         fvOptions(U)
     );
@@ -22,7 +23,7 @@
             UEqn
          ==
 		 	- fvc::grad(p)
-			+ ffluid * sqr(std::sin(2 * M_PI * omega.value() * runTime.value())) * pos(std::sin(2 * M_PI * fplus.value() * runTime.value()))
+			+ ffluid * M_PI * omega.value() * runTime.deltaT().value() * pos(std::sin(2 * M_PI * fplus.value() * runTime.value()))
         );
 
         fvOptions.correct(U);

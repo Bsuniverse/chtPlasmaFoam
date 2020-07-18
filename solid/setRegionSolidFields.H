@@ -23,7 +23,13 @@ if (!thermo.isotropic())
     );
 }
 
-
+dimensionedScalar eps0Solid = eps0s[i];
+dimensionedScalar epMaxSolid = epMaxs[i];
+dimensionedScalar rhocMaxSolid = rhocMaxs[i];
+dimensionedScalar omegaSolid = omegas[i];
+dimensionedScalar fplusSolid = fpluses[i];
+volScalarField& epSo = epSolid[i];
+volScalarField& epsSo = epsSolid[i];
 volScalarField& h = thermo.he();
 
 const volScalarField& betav = betavSolid[i];

@@ -1,21 +1,28 @@
 // Initialise fluid field pointer lists
+PtrList<singlePhaseTransportModel> thermoFluid(fluidRegions.size());
 PtrList<volScalarField> pFluid(fluidRegions.size());
+PtrList<volScalarField> TFluid(fluidRegions.size());
 PtrList<volVectorField> UFluid(fluidRegions.size());
-PtrList<volScalarField> epFluid(fluidRegions.size());
-PtrList<volScalarField> rhocFluid(fluidRegions.size());
 PtrList<volScalarField> rhoFluid(fluidRegions.size());
+PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
+PtrList<volScalarField> KFluid(fluidRegions.size());
+PtrList<dimensionedScalar> nuFluid(fluidRegions.size());
+PtrList<dimensionedScalar> cpFluid(fluidRegions.size());
+PtrList<dimensionedScalar> PrFluid(fluidRegions.size());
+PtrList<dimensionedScalar> PrtFluid(fluidRegions.size());
+PtrList<incompressible::turbulenceModel> turbulenceFluid(fluidRegions.size());
+// initialise electrical field pointer lists
 PtrList<volScalarField> epsFluid(fluidRegions.size());
 PtrList<volScalarField> lambdaFluid(fluidRegions.size());
 PtrList<volVectorField> EFluid(fluidRegions.size());
 PtrList<volVectorField> fFluid(fluidRegions.size());
-PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
-PtrList<singlePhaseTransportModel> laminarTransports(fluidRegions.size());
-PtrList<incompressible::turbulenceModel> turbulenceFluid(fluidRegions.size());
-PtrList<dimensionedScalar> eps0s(fluidRegions.size());
-PtrList<dimensionedScalar> epMaxs(fluidRegions.size());
-PtrList<dimensionedScalar> rhocMaxs(fluidRegions.size());
-PtrList<dimensionedScalar> omegas(fluidRegions.size());
-PtrList<dimensionedScalar> fpluses(fluidRegions.size());
+PtrList<volScalarField> epFluid(fluidRegions.size());
+PtrList<volScalarField> rhocFluid(fluidRegions.size());
+PtrList<dimensionedScalar> eps0f(fluidRegions.size());
+PtrList<dimensionedScalar> epMaxf(fluidRegions.size());
+PtrList<dimensionedScalar> rhocMaxf(fluidRegions.size());
+PtrList<dimensionedScalar> omegaf(fluidRegions.size());
+PtrList<dimensionedScalar> fplusf(fluidRegions.size());
 
 PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
 PtrList<fv::options> fluidFvOptions(fluidRegions.size());
@@ -34,12 +41,11 @@ forAll(fluidRegions, i)
             runTime.constant(),
             fluidRegions[i],
             IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
+            IOobject::NO_WRITE)
     );
 	
     Info << "    permiticity of free space, eps0" << endl;
-    eps0s.set
+    eps0f.set
     (
         i,
         new dimensionedScalar
@@ -51,7 +57,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    electric potential coefficient of input sine signal, epMax" << endl;
-    epMaxs.set
+    epMaxf.set
     (
         i,
         new dimensionedScalar
@@ -63,7 +69,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    charge density coefficient of input sine signal, rhocMax" << endl;
-    rhocMaxs.set
+    rhocMaxf.set
     (
         i,
         new dimensionedScalar
@@ -75,7 +81,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    frequency of input sine signal, omega" << endl;
-    omegas.set
+    omegaf.set
     (
         i,
         new dimensionedScalar
@@ -87,7 +93,7 @@ forAll(fluidRegions, i)
     );
 
     Info << "    control frequency, fplus" << endl;
-    fpluses.set
+    fplusf.set
     (
         i,
         new dimensionedScalar
@@ -110,6 +116,48 @@ forAll(fluidRegions, i)
 			IOobject::NO_WRITE
 		}
 	);
+
+    Info<< "*** Reading fluid mesh thermophysical properties for region "
+        << fluidRegions[i].name() << nl << endl;
+
+    Info<< "    Adding to KFluid\n" << endl;
+    KFluid.set
+    (
+        i,
+        new volScalarField
+        (
+            IOobject
+            (
+                "K",
+                runTime.timeName(),
+                fluidRegions[i]
+            ),
+            fluidRegions[i],
+            dimensionedScalar
+            (
+                dimensionSet(1, 1, -3, -1, 0, 0, 0),    
+                readScalar(fluidProperties.lookup("K"))
+            )
+        )
+    );
+
+    Info<< "    Adding to TFluid\n" << endl;
+    TFluid.set
+    (
+        i,
+        new volScalarField
+        (
+            IOobject
+            (
+                "T",
+                runTime.timeName(),
+                fluidRegions[i],
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            fluidRegions[i]   
+        )
+    );
 
     Info<< "    Adding to pFluid\n" << endl;
     pFluid.set
@@ -203,6 +251,7 @@ forAll(fluidRegions, i)
             )
         )
     );
+
     Info<< "    Adding to epsFluid\n" << endl;
     epsFluid.set
     (
@@ -264,8 +313,8 @@ forAll(fluidRegions, i)
         )
     );
 
-	Info<< "    Adding to laminarTransport\n" << endl;
-    laminarTransports.set
+	Info<< "    Adding to thermoFluid\n" << endl;
+    thermoFluid.set
     (
         i,
         new singlePhaseTransportModel
@@ -283,8 +332,53 @@ forAll(fluidRegions, i)
         (
             UFluid[i],
             phiFluid[i],
-            laminarTransports[i]
+            thermoFluid[i]
         ).ptr()
+    );
+
+    PrFluid.set
+    (
+    	i,
+    	new dimensionedScalar
+		(
+         "Pr",
+         dimensionSet(0, 0, 0, 0, 0, 0, 0),
+		 thermoFluid[i].lookup("Pr")
+		)
+    );
+    // Turbulent Prandtl number
+    PrtFluid.set
+    (
+    	i,
+    	new dimensionedScalar
+		(
+         "Prt",
+         dimensionSet(0, 0, 0, 0, 0, 0, 0),
+		 thermoFluid[i].lookup("Prt")
+		)
+    );
+
+    // Kynematic viscosity
+    nuFluid.set
+    (
+    	i,
+    	new dimensionedScalar
+		(
+         "nu",
+         dimensionSet(0, 2, -1, 0, 0, 0, 0),
+		 thermoFluid[i].lookup("nu")
+		)
+    );
+
+    cpFluid.set
+    (
+    	i,
+    	new dimensionedScalar
+		(
+         "cp",
+         dimensionSet(0, 2, -2, -1, 0, 0, 0),
+		 thermoFluid[i].lookup("cp")
+		)
     );
 
 	Info<< "    Adding MRF\n" << endl;

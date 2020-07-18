@@ -103,8 +103,8 @@ forAll(fluidRegions, i)
 		)
 	);
 
-	dimensionedScalar rhocMax = rhocMaxs[i];
-	dimensionedScalar epMax = epMaxs[i];
+	dimensionedScalar rhocMax = rhocMaxf[i];
+	dimensionedScalar epMax = epMaxf[i];
 
 	Info<< "    Adding to fFluid\n" << endl;
 	fFluid.set
