@@ -11,7 +11,7 @@
       + fvm::div(phi, T)
       - fvm::laplacian(kappaEff, T)
 	  ==
-	  	M_PI * eps * eps0 * omega * runTime.deltaT().value() * magSqr(fvc::grad(ep) * epMax) * pos(std::sin(2 * M_PI * fplus.value() * runTime.value())) / rho / cp
+	  	M_PI * eps * eps0 * omega * 0.0001 * magSqr(fvc::grad(ep) * epMax) * pos(std::sin(2 * M_PI * fplus.value() * runTime.value())) / rho / cp
     );
 
     EEqn.relax();
